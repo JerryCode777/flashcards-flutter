@@ -4,11 +4,15 @@ class Flashcard {
   final String question;
   final String answer;
 
-  Flashcard({this.id, required this.question, required this.answer});
+  Flashcard({
+    this.id,
+    required this.question,
+    required this.answer,
+  });
 
   factory Flashcard.fromJson(Map<String, dynamic> json) {
     return Flashcard(
-      id: json['id'],
+      id: json['id'],                // Asegurarnos de leer "id"
       question: json['question'],
       answer: json['answer'],
     );
@@ -18,6 +22,7 @@ class Flashcard {
     return {
       'question': question,
       'answer': answer,
+      // 'id': id, // Normalmente no mandas id en POST, a menos que tu backend lo requiera
     };
   }
 }

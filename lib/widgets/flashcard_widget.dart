@@ -5,6 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../models/flashcard.dart';
 import '../providers/flashcard_provider.dart';
 import '../screens/add_edit_flashcard_screen.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
 
 class FlashcardWidget extends StatefulWidget {
   final Flashcard flashcard;
@@ -17,6 +19,17 @@ class FlashcardWidget extends StatefulWidget {
 
 class _FlashcardWidgetState extends State<FlashcardWidget> {
   bool _showAnswer = false;
+  final FlutterTts _flutterTts = FlutterTts();
+
+  @override
+  void dispose() {
+    _flutterTts.stop(); // Detener el TTS cuando el widget se destruya
+    super.dispose();
+  }
+
+  void _speak(String text) async {
+    await _flutterTts.speak(text); // Función para leer el texto
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +80,26 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
                     _showAnswer
                         ? Icons.visibility_off
                         : Icons.visibility,
-                    color: Colors.green,
+                    color: const Color.fromARGB(255, 62, 191, 255),
                   ),
                   label: Text(
                     _showAnswer ? 'Ocultar' : 'Mostrar',
-                    style: TextStyle(color: Colors.green),
+                    style: TextStyle(color: const Color.fromARGB(255, 62, 191, 255)),
                   ),
+                ),
+                //boton de audio
+                IconButton(
+                  icon: Icon(
+                    FontAwesomeIcons.volumeUp,
+                    color: const Color.fromARGB(255, 62, 191, 255),
+                  ),
+                  onPressed: () {
+                    if (_showAnswer) {
+                      _speak(widget.flashcard.answer);
+                    } else {
+                      _speak(widget.flashcard.question);
+                    }
+                  },
                 ),
                 // Editar y Eliminar
                 Row(
@@ -81,7 +108,7 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
                     IconButton(
                       icon: Icon(
                         FontAwesomeIcons.penToSquare,
-                        color: Colors.green,
+                        color: const Color.fromARGB(255, 76, 152, 175),
                       ),
                       onPressed: () {
                         Navigator.push(
