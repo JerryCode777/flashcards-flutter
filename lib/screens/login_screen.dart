@@ -1,11 +1,13 @@
 // lib/screens/login_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart'; // Para reproducir video
+
 import '../providers/auth_provider.dart';
 import '../screens/home_screen.dart';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
+import 'privacy_policy_screen.dart'; // Asegúrate de importar la pantalla de política de privacidad
+import 'terms_conditions_screen.dart'; // Asegúrate de importar la pantalla de términos y condiciones
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -17,38 +19,14 @@ class _LoginScreenState extends State<LoginScreen> {
   String _email = '';
   String _password = '';
 
-  late VideoPlayerController _videoController;
-  bool _videoInitialized = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // 1. Inicializamos el controlador para reproducir un video local
-    _videoController = VideoPlayerController.asset('assets/videos/mi_video.mp4')
-      ..setLooping(true)
-      ..initialize().then((_) {
-        setState(() {
-          _videoInitialized = true; // Ya está inicializado
-        });
-        _videoController.play(); // Iniciamos la reproducción en loop
-      });
-  }
-  //prueba commit
-
-  @override
-  void dispose() {
-    _videoController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Iniciar Sesión')),
+      appBar: AppBar(title: const Text('Iniciar Sesión')),
       body: authProvider.isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -62,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         // Email
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Email'),
+                          decoration: const InputDecoration(labelText: 'Email'),
                           onSaved: (val) => _email = val!.trim(),
                           validator: (val) {
                             if (val == null || val.isEmpty) {
@@ -73,7 +51,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         // Contraseña
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Contraseña'),
+                          decoration:
+                              const InputDecoration(labelText: 'Contraseña'),
                           obscureText: true,
                           onSaved: (val) => _password = val!.trim(),
                           validator: (val) {
@@ -83,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
                         // Botón Ingresar
                         ElevatedButton(
@@ -100,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 );
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                  const SnackBar(
                                     content:
                                         Text('Error al iniciar sesión'),
                                   ),
@@ -108,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             }
                           },
-                          child: Text('Ingresar'),
+                          child: const Text('Ingresar'),
                         ),
 
                         // Opción de registro
@@ -121,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             );
                           },
-                          child: Text('¿No tienes cuenta? Regístrate'),
+                          child: const Text('¿No tienes cuenta? Regístrate'),
                         ),
 
                         // ¿Olvidaste tu contraseña?
@@ -134,31 +113,38 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             );
                           },
-                          child: Text('¿Olvidaste tu contraseña?'),
+                          child: const Text('¿Olvidaste tu contraseña?'),
                         ),
                       ],
                     ),
                   ),
 
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
 
                   // -------------------
-                  // VIDEO ABAJO DEL FORMULARIO
+                  // POLÍTICA DE PRIVACIDAD Y TÉRMINOS
                   // -------------------
-                  Container(
-                    height: 200,           // Ajusta la altura que desees
-                    width: double.infinity,
-                    color: Colors.black12, // Simple fondo gris claro
-                    child: _videoInitialized
-                        ? FittedBox(
-                            fit: BoxFit.cover,
-                            child: SizedBox(
-                              width: _videoController.value.size.width,
-                              height: _videoController.value.size.height,
-                              child: VideoPlayer(_videoController),
-                            ),
-                          )
-                        : Center(child: CircularProgressIndicator()),
+                  ListTile(
+                    title: const Text("Política de Privacidad"),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PrivacyPolicyScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    title: const Text("Términos y Condiciones"),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TermsConditionsScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

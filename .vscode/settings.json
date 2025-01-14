@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "C:/Users/JERRY/Desktop/flutter/flutter_application_1/windows"
+    "cmake.sourceDirectory": "C:/Users/JERRY/Desktop/flutter/flutter_application_1/windows",
+    "cmake.ignoreCMakeListsMissing": true
 }
